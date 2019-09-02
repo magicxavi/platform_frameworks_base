@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <plurals name="type_clock_header" translatable="false">
+        <item quantity="other"><annotation name="color">Сейчас</annotation>\n^1\n^2</item>
+        <item quantity="one"><annotation name="color">Сейчас</annotation>\n^1\n^2</item>
+        <item quantity="few"><annotation name="color">Сейчас</annotation>\n^1\n^2</item>
+    </plurals>
+</resources>
