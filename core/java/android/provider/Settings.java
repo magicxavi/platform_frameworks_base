@@ -5980,6 +5980,30 @@ public final class Settings {
         public static final String SMART_CHARGING_RESET_STATS = "smart_charging_reset_stats";
 
         /**
+         * Whether to show charging animation on lock screen
+         * @hide
+         */
+        public static final String LOCKSCREEN_CHARGING_ANIMATION = "lockscreen_charging_animation";
+
+        /**
+         * Whether to vibrate on power connection or disconnection
+         * @hide
+         */
+        public static final String VIBRATION_ON_CHARGE_STATE_CHANGED = "vibration_on_charge_state_changed";
+
+        /**
+         * Select which lockscreen date style to display
+         * @hide
+         */
+        public static final String LOCKSCREEN_DATE_SELECTION = "lockscreen_date_selection";
+
+        /**
+         * Select which lockscreen date format to display
+         * @hide
+         */
+        public static final String LOCKSCREEN_DATE_FORMAT = "lockscreen_date_format";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

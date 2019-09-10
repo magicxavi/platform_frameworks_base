@@ -696,6 +696,8 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
     private BitmapDrawable altDrawable;
 
+    private boolean mChargingAnimation;
+
     private boolean mPocketJudgeAllowFP;
 
     private BroadcastReceiver mWallpaperChangedReceiver = new BroadcastReceiver() {
@@ -895,6 +897,15 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACCENT_PICKER),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_CHARGING_ANIMATION),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.LOCKSCREEN_DATE_SELECTION),
+                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.LOCKSCREEN_DATE_FORMAT),
+                     false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -918,7 +929,9 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                 setAmbientVis();
             } else if (uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_CLOCK)) ||
                    uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_INFO)) ||
-                   uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_CLOCK_SELECTION))) {
+                   uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_CLOCK_SELECTION)) ||
+                   uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_DATE_SELECTION)) ||
+                   uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_DATE_FORMAT))) {
                 updateKeyguardStatusSettings();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.FORCE_AMBIENT_FOR_MEDIA))) {
@@ -942,6 +955,9 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                     Settings.System.ACCENT_PICKER))) {
                 unloadAccents(); // Unload the accents when users request it
                 updateAccents(); // Update the accents when users request it
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_CHARGING_ANIMATION))) {
+                updateChargingAnimation();
             }
 	    update();
         }
@@ -959,12 +975,14 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
             setHeadsUpStoplist();
             setHeadsUpBlacklist();
-			setPulseBlacklist();
+            setPulseBlacklist();
             updateKeyguardStatusSettings();
-			setForceAmbient();
-	        setUseLessBoringHeadsUp();
+	    setForceAmbient();
+	    setUseLessBoringHeadsUp();
             setFpToDismissNotifications();
+            updatePocketJudgeFP();
             updateLockscreenFilter();
+            updateChargingAnimation();
         }
 
     private void setHeadsUpStoplist() {
@@ -1004,6 +1022,14 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         mAlbumArtFilter = Settings.System.getIntForUser(mContext.getContentResolver(),
                 Settings.System.LOCKSCREEN_ALBUM_ART_FILTER, 0,
                 UserHandle.USER_CURRENT);
+    }
+
+    private void updateChargingAnimation() {
+        mChargingAnimation = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.LOCKSCREEN_CHARGING_ANIMATION, 1, UserHandle.USER_CURRENT) == 1;
+        if (mKeyguardIndicationController != null) {
+            mKeyguardIndicationController.updateChargingIndication(mChargingAnimation);
+        }
     }
 
     private void updateKeyguardStatusSettings() {
